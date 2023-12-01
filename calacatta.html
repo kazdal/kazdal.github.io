@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Calacatta</title>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta charset="UTF-8">
+<body>
+
+<form id="tileForm">
+    <h2>PRODUCT VALUES</h2>
+
+    <label for="boxCoverage">Box Coverage:</label><br>
+    <input type="number" id="boxCoverage" name="boxCoverage" value="6"><br>
+
+    <label for="sqftCoverage">SqFt Coverage:</label><br>
+    <input type="text" id="sqftCoverage" name="sqftCoverage" value="0.125"><br>
+
+    <label for="piecesInBox">Pieces Per Box:</label><br>
+    <input type="number" id="piecesInBox" name="piecesInBox" value="40"><br>
+
+    <label for="minOrderUnit">Min Order Unit:</label><br>
+    <input type="number" id="minOrderUnit" name="minOrderUnit" value="20"><br>
+
+    <label for="minOrderBox">Min Order Box:</label><br>
+    <input type="number" id="minOrderBox" name="minOrderBox" value="4"><br>
+<br>
+    <button type="button" onclick="calculate('sqft');">UPDATE PRODUCT VALUES</button>
+
+    <h2>CALCULATIONS</h2>
+
+    <label for="sqFt">sqFt:</label><br>
+    <input type="number" id="sqFt" name="sqFt" onkeyup="calculate('sqft');"><br>
+
+
+    <label for="pcs">Piece:</label><br>
+    <input type="number" id="pcs" name="pcs" onkeyup="calculate('unit');"><br>
+
+
+    <label for="box">Box:</label><br>
+    <input type="number" id="box" name="box" onkeyup="calculate('box');"><br>
+</form>
+
+<script>
+
+    calculate('sqft');
+
+    function calculate(neededType) {
+
+        let boxCoverage  = document.getElementById('boxCoverage').value;
+        let sqftCoverage = document.getElementById('sqftCoverage').value;
+        //let unit       = 'sqft';
+        let piecesInBox  = 40;
+        let minOrderUnit = 20;
+        let minOrderBox  = 4;
+
+        let sqftValue    = document.getElementById('sqFt');
+        let unitValue    = document.getElementById('pcs');
+        let boxValue     = document.getElementById('box');
+
+        unitValue.value  = minOrderUnit;
+
+        console.log("##### calculating ...");
+        console.log("##### boxCoverage = " + boxCoverage);
+
+        setTimeout(function() {
+            if (neededType === 'sqft') {
+                console.log("##### neededType = sqft");
+                let boxesNeeded = Math.ceil(sqftValue.value / boxCoverage);
+                let unitsNeeded = Math.ceil(sqftValue.value / sqftCoverage);
+                boxValue.value  = boxesNeeded;
+                unitValue.value = unitsNeeded;
+            } else if (neededType === 'box') {
+                console.log("##### neededType = box");
+                let sqftNeeded  = boxCoverage * boxValue.value;
+                let unitsNeeded = piecesInBox * boxValue.value;
+                sqftValue.value = sqftNeeded;
+                unitValue.value = unitsNeeded;
+            } else if (neededType === 'unit') {
+                console.log("##### neededType = unit");
+                let sqftNeeded  = sqftCoverage * unitValue.value;
+                let boxesNeeded = Math.ceil(unitValue.value / piecesInBox);
+                sqftValue.value = sqftNeeded;
+                boxValue.value  = boxesNeeded;
+            }
+
+            // Check minimum order requirements
+            if (unitValue.value < minOrderUnit) {
+                console.log("##### unitValue < minOrderUnit");
+                unitValue.value = minOrderUnit;
+                calculate('unit');
+            }
+            if (boxValue.value < minOrderBox) {
+                console.log("##### boxValue < minOrderBox");
+                boxValue.value = minOrderBox;
+                calculate('box');
+            }
+        }, 1000);
+    }
+
+</script>
+
+</body>
+</html>
