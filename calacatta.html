@@ -24,7 +24,7 @@
 
     <label for="minOrderBox">Min Order Box:</label><br>
     <input type="number" id="minOrderBox" name="minOrderBox" value="4"><br>
-<br>
+    <br>
     <button type="button" onclick="calculate('sqft');">UPDATE PRODUCT VALUES</button>
 
     <h2>CALCULATIONS</h2>
@@ -70,6 +70,7 @@
                 let unitsNeeded = Math.ceil(sqftValue.value / sqftCoverage);
                 boxValue.value  = boxesNeeded;
                 unitValue.value = unitsNeeded;
+                sqftValue.value = boxesNeeded * boxCoverage;
             } else if (neededType === 'box') {
                 console.log("##### neededType = box");
                 let sqftNeeded  = boxCoverage * boxValue.value;
